@@ -38,9 +38,10 @@ const layout = async ({ children }: layoutProps) => {
   const unseenRequestCount = (
     (await fetchRedis(
       "smembers",
-      `user:${session.user.id}:incoming_fri end_requests`
+      `user:${session.user.id}:incoming_friend_requests`
     )) as User[]
   ).length;
+  // console.log(unseenRequestCount)
   return (
     <div className="w-full flex h-screen">
       <div className="flx h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
@@ -108,9 +109,11 @@ const layout = async ({ children }: layoutProps) => {
               <SignOutButton className="h-full aspect-square" />
             </li>
           </ul>
-        </nav>
+        </nav> 
       </div>
-      {children}
+     <aside className="\  ">
+     {children}
+      </aside> 
     </div>
   );
 };

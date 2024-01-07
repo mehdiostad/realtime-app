@@ -1,24 +1,47 @@
 "use client";
-import { cn } from "@/libs/utils";
+import { pusherClient } from "@/libs/pusher";
+import { cn, toPusherKey } from "@/libs/utils";
 import { format } from "date-fns";
 import Image from "next/image";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 interface MessagesProps {
   initialMessages: Message[];
   sessionId: string;
   chatPartner: User;
-  sessionImg : string | null | undefined;
+  sessionImg: string | null | undefined;
+  chatId: string;
 }
 
-const Messages: FC<MessagesProps> = ({ initialMessages, sessionId , chatPartner , sessionImg}) => {
-  const formatTimeStamp = (timestamp:number)=>{
-    return format(timestamp, 'HH:mm')
-  }
+const Messages: FC<MessagesProps> = ({
+  initialMessages,
+  sessionId,
+  chatPartner,
+  sessionImg,
+  chatId,
+}) => {
+  const formatTimeStamp = (timestamp: number) => {
+    return format(timestamp, "HH:mm");
+  };
   const [messages, setMessages] = useState<Message[]>(initialMessages);
-  console.log('payam ha',messages)   
+  console.log("payam ha", messages);
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
   // console.log(messages)
+  useEffect(() => {
+    pusherClient.subscribe(toPusherKey(`chat:${chatId}`));
+    // console.log("listening to ", `user:${sessionId}:incoming_friend_requests`)
+
+    const messageHandler = (message: Message) => {
+      setMessages((prev) => [message, ...prev]);
+    };
+
+    pusherClient.bind("incoming-message", messageHandler);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`chat:${chatId}`));
+      pusherClient.unbind("incoming-message", messageHandler);
+    };
+  });
   return (
     <div
       id="messages"
@@ -26,10 +49,10 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionId , chatPartner 
     >
       <div ref={scrollDownRef} />
       {messages.map((message, index) => {
-        const isCurrentUser = message.senderId === sessionId
+        const isCurrentUser = message.senderId === sessionId;
 
         const hasNextMessageFromSameUser =
-          messages[index - 1]?.senderId === messages[index].senderId
+          messages[index - 1]?.senderId === messages[index].senderId;
         return (
           <div
             key={`${message.id} - ${message.timestamp}`}
@@ -46,7 +69,6 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionId , chatPartner 
                   {
                     "order-1 items-end": isCurrentUser,
                     "order-2 items-start": !isCurrentUser,
-                    
                   }
                 )}
               >
@@ -60,19 +82,28 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionId , chatPartner 
                       !hasNextMessageFromSameUser && !isCurrentUser,
                   })}
                 >
-                  
                   {message.text}{" "}
                   <span className="ml-2 text-xs text-gray-400">
                     {formatTimeStamp(message.timestamp)}
                   </span>
                 </span>
               </div>
-              <div className={cn('relative w-6 h-6', {
-                'order-2': isCurrentUser,
-                'order-1': !isCurrentUser,
-                'invisible': hasNextMessageFromSameUser
-              })}>
-                <Image  fill src={isCurrentUser ? (sessionImg as string): chatPartner.image} alt='profile peacture' referrerPolicy="no-referrer" className="rounded-full"/>
+              <div
+                className={cn("relative w-6 h-6", {
+                  "order-2": isCurrentUser,
+                  "order-1": !isCurrentUser,
+                  invisible: hasNextMessageFromSameUser,
+                })}
+              >
+                <Image
+                  fill
+                  src={
+                    isCurrentUser ? (sessionImg as string) : chatPartner.image
+                  }
+                  alt="profile peacture"
+                  referrerPolicy="no-referrer"
+                  className="rounded-full"
+                />
               </div>
             </div>
           </div>

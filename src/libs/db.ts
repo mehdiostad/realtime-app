@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis'
 
 export const db = new Redis({
-  url: "https://eu1-cool-lark-38940.upstash.io",
-  token: 'AZgcACQgMDcyY2M2Y2QtMzU1Mi00MzM1LWJlNGEtN2RmM2E0MDgzOWJhODZiOGI1NzQwYjMwNDBmYTgyMzdkODkyZGQ2MWFjM2I=',
+  url: "https://eu2-splendid-rhino-31234.upstash.io",
+  token: 'AXoCACQgMDhjZjhmZmUtOGY3My00MzQ3LWJhZjctMTA0MDY2ZjgxN2ZkYTM3NTU2MzYyOTM4NGQ1ZWExM2Y1NTUzMTNhNDEyZDg=',
 })
    

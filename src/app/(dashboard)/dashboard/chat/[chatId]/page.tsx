@@ -48,7 +48,7 @@ const page = async ({ params }: pageProps) => {
   const chatPartner = (await db.get(`user:${chatPartnerId}`)) as User;
   // console.log("chatPartner", chatPartner)
   const initialMessages = await getChatMessages(chatId);
-  console.log("initialmessages", initialMessages);
+  // console.log("initialmessages", initialMessages);
 
   return (
     <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)] gap-20">
@@ -77,7 +77,7 @@ const page = async ({ params }: pageProps) => {
         </div>
       </div>
 
-      <Messages initialMessages={initialMessages} sessionId={session.user.id}  chatPartner = {chatPartner} sessionImg={session.user.image}/>
+      <Messages initialMessages={initialMessages} sessionId={session.user.id}  chatPartner = {chatPartner} sessionImg={session.user.image} chatId={chatId}/>
       <ChatInput chatPartner={chatPartner} chatId={chatId} />
     </div>
   );

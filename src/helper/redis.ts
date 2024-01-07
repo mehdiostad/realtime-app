@@ -1,6 +1,6 @@
 const upstashRedisRestUrl =
-  "https://eu1-cool-lark-38940.upstash.io";
-const authToken = "AZgcACQgMDcyY2M2Y2QtMzU1Mi00MzM1LWJlNGEtN2RmM2E0MDgzOWJhODZiOGI1NzQwYjMwNDBmYTgyMzdkODkyZGQ2MWFjM2I="
+  "https://eu2-splendid-rhino-31234.upstash.io";
+const authToken = "AXoCACQgMDhjZjhmZmUtOGY3My00MzQ3LWJhZjctMTA0MDY2ZjgxN2ZkYTM3NTU2MzYyOTM4NGQ1ZWExM2Y1NTUzMTNhNDEyZDg="
 
 type Command = 'zrange' | 'sismember' | 'get' | 'smembers'
 
